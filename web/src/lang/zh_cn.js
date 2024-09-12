@@ -110,7 +110,8 @@ export default {
     copyToTxt: 'Txt',
     copyToPng: '图片',
     copySuccess: '复制成功',
-    copyFail: '复制失败'
+    copyFail: '复制失败',
+    number: '编号其子节点'
   },
   count: {
     words: '字数',
@@ -154,8 +155,9 @@ export default {
   import: {
     title: '导入',
     selectFile: '选取文件',
-    supportFile: '支持.smm、.json、.xmind、.xlsx、.md文件',
-    enableFileTip: '请选择.smm、.json、.xmind、.xlsx、.md文件',
+    support: '支持',
+    file: '文件',
+    pleaseSelect: '请选择',
     maxFileNum: '最多只能选择一个文件',
     notSelectTip: '请选择要导入的文件',
     fileContentError: '文件内容有误',
@@ -235,7 +237,8 @@ export default {
     endColor: '结束',
     arrowDir: '箭头位置',
     arrowDirStart: '头部',
-    arrowDirEnd: '尾部'
+    arrowDirEnd: '尾部',
+    direction: '方向'
   },
   theme: {
     title: '主题',
@@ -298,7 +301,8 @@ export default {
     yes: '是',
     no: '否',
     exportError: '导出失败',
-    dragTip: '在此释放以导入该文件'
+    dragTip: '在此释放以导入该文件',
+    deleteNodeImgTip: '是否确认删除该节点图片？'
   },
   mouseAction: {
     tip1: '当前：左键拖动画布，右键框选节点',
@@ -309,7 +313,8 @@ export default {
     replacePlaceholder: '请输入替换内容',
     replace: '替换',
     replaceAll: '全部替换',
-    cancel: '取消'
+    cancel: '取消',
+    noResult: '暂无结果'
   },
   nodeIconSidebar: {
     title: '图标/贴纸',

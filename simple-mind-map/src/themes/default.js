@@ -42,6 +42,8 @@ export default {
   associativeLineActiveWidth: 8,
   // 关联线激活状态的颜色
   associativeLineActiveColor: 'rgba(2, 167, 240, 1)',
+  // 关联线样式
+  associativeLineDasharray: [6, 4],
   // 关联线文字颜色
   associativeLineTextColor: 'rgb(51, 51, 51)',
   // 关联线文字大小
@@ -80,8 +82,12 @@ export default {
     gradientStyle: false,
     startColor: '#549688',
     endColor: '#fff',
+    startDir: [0, 0],
+    endDir: [1, 0],
     // 连线标记的位置，start（头部）、end（尾部），该配置在showLineMarker配置为true时生效
-    lineMarkerDir: 'end'
+    lineMarkerDir: 'end',
+    // 节点鼠标hover和激活时显示的矩形边框的颜色，主题里不设置，默认会取hoverRectColor实例化选项的值
+    hoverRectColor: ''
   },
   // 二级节点样式
   second: {
@@ -92,7 +98,7 @@ export default {
     fontFamily: '微软雅黑, Microsoft YaHei',
     color: '#565656',
     fontSize: 16,
-    fontWeight: 'noraml',
+    fontWeight: 'normal',
     fontStyle: 'normal',
     lineHeight: 1.5,
     borderColor: '#549688',
@@ -103,7 +109,10 @@ export default {
     gradientStyle: false,
     startColor: '#549688',
     endColor: '#fff',
-    lineMarkerDir: 'end'
+    startDir: [0, 0],
+    endDir: [1, 0],
+    lineMarkerDir: 'end',
+    hoverRectColor: ''
   },
   // 三级及以下节点样式
   node: {
@@ -114,7 +123,7 @@ export default {
     fontFamily: '微软雅黑, Microsoft YaHei',
     color: '#6a6d6c',
     fontSize: 14,
-    fontWeight: 'noraml',
+    fontWeight: 'normal',
     fontStyle: 'normal',
     lineHeight: 1.5,
     borderColor: 'transparent',
@@ -125,7 +134,10 @@ export default {
     gradientStyle: false,
     startColor: '#549688',
     endColor: '#fff',
-    lineMarkerDir: 'end'
+    startDir: [0, 0],
+    endDir: [1, 0],
+    lineMarkerDir: 'end',
+    hoverRectColor: ''
   },
   // 概要节点样式
   generalization: {
@@ -136,7 +148,7 @@ export default {
     fontFamily: '微软雅黑, Microsoft YaHei',
     color: '#565656',
     fontSize: 16,
-    fontWeight: 'noraml',
+    fontWeight: 'normal',
     fontStyle: 'normal',
     lineHeight: 1.5,
     borderColor: '#549688',
@@ -146,19 +158,12 @@ export default {
     textDecoration: 'none',
     gradientStyle: false,
     startColor: '#549688',
-    endColor: '#fff'
+    endColor: '#fff',
+    startDir: [0, 0],
+    endDir: [1, 0],
+    hoverRectColor: ''
   }
 }
-
-// 支持激活样式的属性
-// 简单来说，会改变节点大小的都不支持在激活时设置，为了性能考虑，节点切换激活态时不会重新计算节点大小
-export const supportActiveStyle = [
-  'fillColor',
-  'borderColor',
-  'borderWidth',
-  'borderDasharray',
-  'borderRadius'
-]
 
 // 检测主题配置是否是节点大小无关的
 const nodeSizeIndependenceList = [
@@ -187,7 +192,10 @@ const nodeSizeIndependenceList = [
   'gradientStyle',
   'lineRadius',
   'startColor',
-  'endColor'
+  'endColor',
+  'startDir',
+  'endDir',
+  'hoverRectColor'
 ]
 export const checkIsNodeSizeIndependenceConfig = config => {
   let keys = Object.keys(config)

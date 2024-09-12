@@ -17,7 +17,7 @@
     <OutlineSidebar :mindMap="mindMap"></OutlineSidebar>
     <Style v-if="!isZenMode"></Style>
     <BaseStyle :data="mindMapData" :mindMap="mindMap"></BaseStyle>
-    <Theme v-if="mindMap" :mindMap="mindMap"></Theme>
+    <Theme v-if="mindMap" :data="mindMapData" :mindMap="mindMap"></Theme>
     <Structure :mindMap="mindMap"></Structure>
     <ShortcutKey></ShortcutKey>
     <Contextmenu v-if="mindMap" :mindMap="mindMap"></Contextmenu>
@@ -77,6 +77,13 @@ import OuterFrame from 'simple-mind-map/src/plugins/OuterFrame.js'
 // import HandDrawnLikeStyle from 'simple-mind-map-plugin-handdrawnlikestyle'
 // 标记插件，该插件为付费插件，详情请查看开发文档
 // import Notation from 'simple-mind-map-plugin-notation'
+// 编号插件，该插件为付费插件，详情请查看开发文档
+// import Numbers from 'simple-mind-map-plugin-numbers'
+// Freemind软件格式导入导出插件，该插件为付费插件，详情请查看开发文档
+// import Freemind from 'simple-mind-map-plugin-freemind'
+// Excel软件格式导入导出插件，该插件为付费插件，详情请查看开发文档
+// import Excel from 'simple-mind-map-plugin-excel'
+// npm link simple-mind-map-plugin-excel simple-mind-map-plugin-freemind simple-mind-map-plugin-numbers simple-mind-map-plugin-notation simple-mind-map-plugin-handdrawnlikestyle simple-mind-map
 import OutlineSidebar from './OutlineSidebar'
 import Style from './Style'
 import BaseStyle from './BaseStyle'
@@ -416,6 +423,25 @@ export default {
         },
         expandBtnNumHandler: num => {
           return num >= 100 ? '…' : num
+        },
+        beforeDeleteNodeImg: node => {
+          return new Promise(resolve => {
+            this.$confirm(
+              this.$t('edit.deleteNodeImgTip'),
+              this.$t('edit.tip'),
+              {
+                confirmButtonText: this.$t('edit.yes'),
+                cancelButtonText: this.$t('edit.no'),
+                type: 'warning'
+              }
+            )
+              .then(() => {
+                resolve(false)
+              })
+              .catch(() => {
+                resolve(true)
+              })
+          })
         }
         // createNodePrefixContent: (node) => {
         //   const el = document.createElement('div')
@@ -537,6 +563,20 @@ export default {
       if (typeof Notation !== 'undefined') {
         this.mindMap.addPlugin(Notation)
         this.$store.commit('setSupportMark', true)
+      }
+      if (typeof Numbers !== 'undefined') {
+        this.mindMap.addPlugin(Numbers)
+        this.$store.commit('setSupportNumbers', true)
+      }
+      if (typeof Freemind !== 'undefined') {
+        this.mindMap.addPlugin(Freemind)
+        this.$store.commit('setSupportFreemind', true)
+        Vue.prototype.Freemind = Freemind
+      }
+      if (typeof Excel !== 'undefined') {
+        this.mindMap.addPlugin(Excel)
+        this.$store.commit('setSupportExcel', true)
+        Vue.prototype.Excel = Excel
       }
       this.mindMap.keyCommand.addShortcut('Control+s', () => {
         this.manualSave()

@@ -67,9 +67,7 @@ export const defaultOpt = {
     close: ''
   },
   // 处理收起节点数量
-  expandBtnNumHandler: num => {
-    return num
-  },
+  expandBtnNumHandler: null,
   // 是否显示带数量的收起按钮
   isShowExpandNum: true,
   // 是否只有当鼠标在画布内才响应快捷键事件
@@ -86,6 +84,8 @@ export const defaultOpt = {
   maxHistoryCount: 500,
   // 是否一直显示节点的展开收起按钮，默认为鼠标移上去和激活时才显示
   alwaysShowExpandBtn: false,
+  // 不显示展开收起按钮，优先级比alwaysShowExpandBtn配置高
+  notShowExpandBtn: false,
   // 扩展节点可插入的图标
   iconList: [
     // {
@@ -174,11 +174,6 @@ export const defaultOpt = {
   addHistoryTime: 100,
   // 是否禁止拖动画布
   isDisableDrag: false,
-  // 鼠标移入概要高亮所属节点时的高亮框样式
-  highlightNodeBoxStyle: {
-    stroke: 'rgb(94, 200, 248)',
-    fill: 'transparent'
-  },
   // 创建新节点时的行为
   /*
     DEFAULT  ：默认会激活新创建的节点，并且进入编辑模式。如果同时创建了多个新节点，那么只会激活而不会进入编辑模式
@@ -232,10 +227,14 @@ export const defaultOpt = {
   openPerformance: false,
   // 性能优化模式配置
   performanceConfig: {
-    time: 250,// 当视图改变后多久刷新一次节点，单位：ms，
-    padding: 100,// 超出画布四周指定范围内依旧渲染节点
-    removeNodeWhenOutCanvas: true,// 节点移除画布可视区域后从画布删除
+    time: 250, // 当视图改变后多久刷新一次节点，单位：ms，
+    padding: 100, // 超出画布四周指定范围内依旧渲染节点
+    removeNodeWhenOutCanvas: true // 节点移除画布可视区域后从画布删除
   },
+  // 如果节点文本为空，那么为了避免空白节点高度塌陷，会用该字段指定的文本测量一个高度
+  emptyTextMeasureHeightText: 'abc123我和你',
+  // 是否在进行节点文本编辑时实时更新节点大小和节点位置，开启后当节点数量比较多时可能会造成卡顿
+  openRealtimeRenderOnNodeTextEdit: false,
 
   // 【Select插件】
   // 多选节点时鼠标移动到边缘时的画布移动偏移量
@@ -407,5 +406,13 @@ export const defaultOpt = {
 
   // 【OuterFrame】插件
   outerFramePaddingX: 10,
-  outerFramePaddingY: 10
+  outerFramePaddingY: 10,
+
+  // 【Painter】插件
+  // 是否只格式刷节点手动设置的样式，不考虑节点通过主题的应用的样式
+  onlyPainterNodeCustomStyles: false,
+
+  // 【NodeImgAdjust】插件
+  // 拦截节点图片的删除，点击节点图片上的删除按钮删除图片前会调用该函数，如果函数返回true则取消删除
+  beforeDeleteNodeImg: null
 }

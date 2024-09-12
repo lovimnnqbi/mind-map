@@ -1,4 +1,4 @@
-import Node from '../core/render/node/Node'
+import MindMapNode from '../core/render/node/MindMapNode'
 import { CONSTANTS, initRootNodePositionMap } from '../constants/constant'
 import Lru from '../utils/Lru'
 import { createUid } from '../utils/index'
@@ -69,8 +69,37 @@ class Base {
     }
   }
 
+  // 获取节点编号信息
+  getNumberInfo({ parent, ancestors, layerIndex, index }) {
+    // 编号
+    const hasNumberPlugin = !!this.mindMap.numbers
+    const parentNumberStr =
+      hasNumberPlugin && parent && parent._node.number
+        ? parent._node.number
+        : ''
+    const newNumberStr = hasNumberPlugin
+      ? this.mindMap.numbers.getNodeNumberStr({
+          ancestors,
+          layerIndex,
+          num: index + 1,
+          parentNumberStr
+        })
+      : ''
+    return {
+      hasNumberPlugin,
+      newNumberStr
+    }
+  }
+
   //  创建节点实例
-  createNode(data, parent, isRoot, layerIndex) {
+  createNode(data, parent, isRoot, layerIndex, index, ancestors) {
+    // 编号
+    const { hasNumberPlugin, newNumberStr } = this.getNumberInfo({
+      parent,
+      ancestors,
+      layerIndex,
+      index
+    })
     // 创建节点
     const uid = data.data.uid
     let newNode = null
@@ -90,15 +119,26 @@ class Base {
       }
       this.cacheNode(data._node.uid, newNode)
       this.checkIsLayoutChangeRerenderExpandBtnPlaceholderRect(newNode)
+      // 判断编号是否改变
+      let isNumberChange = false
+      if (hasNumberPlugin) {
+        isNumberChange = this.mindMap.numbers.updateNumber(
+          newNode,
+          newNumberStr
+        )
+      }
       // 主题或主题配置改变了、节点层级改变了，需要重新渲染节点文本等情况需要重新计算节点大小和布局
+      const isNeedResizeSources = this.checkIsNeedResizeSources()
       if (
-        this.checkIsNeedResizeSources() ||
+        isNeedResizeSources ||
         isLayerTypeChange ||
-        newNode.getData('resetRichText')
+        newNode.getData('resetRichText') ||
+        isNumberChange
       ) {
         newNode.getSize()
         newNode.needLayout = true
       }
+      this.checkGetGeneralizationChange(newNode, isNeedResizeSources)
     } else if (
       (this.lru.has(uid) || this.renderer.lastNodeCache[uid]) &&
       !this.renderer.reRender
@@ -129,19 +169,29 @@ class Base {
       const isResizeSource = this.checkIsNeedResizeSources()
       // 主题或主题配置改变了、节点层级改变了，需要重新渲染节点文本，节点数据改变了等情况需要重新计算节点大小和布局
       const isNodeDataChange = lastData !== JSON.stringify(data.data)
+      // 判断编号是否改变
+      let isNumberChange = false
+      if (hasNumberPlugin) {
+        isNumberChange = this.mindMap.numbers.updateNumber(
+          newNode,
+          newNumberStr
+        )
+      }
       if (
         isResizeSource ||
         isNodeDataChange ||
         isLayerTypeChange ||
-        newNode.getData('resetRichText')
+        newNode.getData('resetRichText') ||
+        isNumberChange
       ) {
         newNode.getSize()
         newNode.needLayout = true
       }
+      this.checkGetGeneralizationChange(newNode, isResizeSource)
     } else {
       // 创建新节点
       const newUid = uid || createUid()
-      newNode = new Node({
+      newNode = new MindMapNode({
         data,
         uid: newUid,
         renderer: this.renderer,
@@ -149,7 +199,8 @@ class Base {
         draw: this.draw,
         layerIndex,
         isRoot,
-        parent: !isRoot ? parent._node : null
+        parent: !isRoot ? parent._node : null,
+        number: newNumberStr
       })
       // uid保存到数据上，为了节点复用
       data.data.uid = newUid
@@ -175,6 +226,30 @@ class Base {
       parent._node.addChildren(newNode)
     }
     return newNode
+  }
+
+  // 检查概要节点是否需要更新
+  checkGetGeneralizationChange(node, isResizeSource) {
+    const generalizationList = node.getData('generalization')
+    if (
+      generalizationList &&
+      node._generalizationList &&
+      node._generalizationList.length > 0
+    ) {
+      node._generalizationList.forEach((item, index) => {
+        const gNode = item.generalizationNode
+        const oldData = gNode.getData()
+        const newData = generalizationList[index]
+        if (
+          isResizeSource ||
+          (newData && JSON.stringify(oldData) !== JSON.stringify(newData))
+        ) {
+          gNode.nodeData.data = newData
+          gNode.getSize()
+          gNode.needLayout = true
+        }
+      })
+    }
   }
 
   // 格式化节点位置
@@ -300,18 +375,32 @@ class Base {
   }
 
   //  二次贝塞尔曲线
-  quadraticCurvePath(x1, y1, x2, y2) {
-    let cx = x1 + (x2 - x1) * 0.2
-    let cy = y1 + (y2 - y1) * 0.8
+  quadraticCurvePath(x1, y1, x2, y2, v = false) {
+    let cx, cy
+    if (v) {
+      cx = x1 + (x2 - x1) * 0.8
+      cy = y1 + (y2 - y1) * 0.2
+    } else {
+      cx = x1 + (x2 - x1) * 0.2
+      cy = y1 + (y2 - y1) * 0.8
+    }
     return `M ${x1},${y1} Q ${cx},${cy} ${x2},${y2}`
   }
 
   //  三次贝塞尔曲线
-  cubicBezierPath(x1, y1, x2, y2) {
-    let cx1 = x1 + (x2 - x1) / 2
-    let cy1 = y1
-    let cx2 = cx1
-    let cy2 = y2
+  cubicBezierPath(x1, y1, x2, y2, v = false) {
+    let cx1, cy1, cx2, cy2
+    if (v) {
+      cx1 = x1
+      cy1 = y1 + (y2 - y1) / 2
+      cx2 = x2
+      cy2 = cy1
+    } else {
+      cx1 = x1 + (x2 - x1) / 2
+      cy1 = y1
+      cx2 = cx1
+      cy2 = y2
+    }
     return `M ${x1},${y1} C ${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`
   }
 
