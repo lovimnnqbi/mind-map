@@ -61,6 +61,7 @@ export default {
       'Enable real-time rendering effect for text editing',
     isShowScrollbar: 'Is show scrollbar',
     isUseHandDrawnLikeStyle: 'Is use hand drawn like style',
+    isUseMomentum: 'Is open drag momentum',
     watermark: 'Watermark',
     showWatermark: 'Is show watermark',
     onlyExport: 'Only export',
@@ -73,11 +74,23 @@ export default {
     watermarkTextOpacity: 'Text opacity',
     watermarkTextFontSize: 'Font size',
     belowNode: 'Display below nodes',
-    tagPosition: 'Node tag position',
     tagPositionRight: 'Text right',
     tagPositionBottom: 'Text bottom',
     alwaysShowExpandBtn: 'Always show expand btn',
-    enableAutoEnterTextEditWhenKeydown: 'Auto enter text edit when keydown'
+    enableAutoEnterTextEditWhenKeydown: 'Auto enter text edit when keydown',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    changeRichTextTip:
+      'This operation will clear all historical modification records and modify the mind map data. Do you want to continue?',
+    changeRichTextTip2: 'Do you want to switch to rich text mode?',
+    changeRichTextTip3: 'Do you want to switch to non rich text mode?',
+    enableDragImport:
+      'Is it allowed to directly drag and drop files to the page for import',
+    imgTextMargin: 'Node image and text margin',
+    textContentMargin: 'Node contents margin',
+    enableInheritAncestorLineStyle:
+      'Node connection style inherits the style of ancestor nodes',
+    enableAi: 'Is enable AI function'
   },
   color: {
     moreColor: 'More color'
@@ -123,8 +136,10 @@ export default {
     copyFail: 'Copy fail',
     number: 'Number child nodes',
     expandNodeChild: 'Expand all sub nodes',
+    unExpandNodeChild: 'Un expand all sub nodes',
     addToDo: 'Add toDo',
-    removeToDo: 'Remove toDo'
+    removeToDo: 'Remove toDo',
+    aiCreate: 'AI Continuation'
   },
   count: {
     words: 'Words',
@@ -144,11 +159,7 @@ export default {
     svgFile: 'svg file',
     pdfFile: 'pdf file',
     markdownFile: 'markdown file',
-    tips: 'tips: .smm and .json file can be import',
     isTransparent: 'Background is transparent',
-    pngTips:
-      'tips: Exporting pictures in rich text mode is time-consuming. It is recommended to export to svg format',
-    svgTips: 'tips: Exporting pictures in rich text mode is time-consuming',
     transformingDomToImages: 'Converting nodes: ',
     notifyTitle: 'Info',
     notifyMessage:
@@ -158,7 +169,9 @@ export default {
     useMultiPageExport: 'Export multi page',
     defaultFileName: 'Mind map',
     addFooterTextPlaceholder: 'For example: From simple-mind-map',
-    addFooterText: 'Add text at the footer'
+    addFooterText: 'Add text at the footer',
+    desc: 'Desc',
+    options: 'Options'
   },
   fullscreen: {
     fullscreenShow: 'Full screen show',
@@ -183,7 +196,7 @@ export default {
   navigatorToolbar: {
     openMiniMap: 'Open mini map',
     closeMiniMap: 'Close mini map',
-    readonly: 'Change to eadonly',
+    readonly: 'Change to Readonly',
     edit: 'Change to edit',
     backToRoot: 'Back to root node',
     changeSourceCodeEdit: 'Switch to source code editing mode'
@@ -209,7 +222,9 @@ export default {
   },
   outline: {
     title: 'Outline',
-    nodeDefaultText: 'Branch node'
+    nodeDefaultText: 'Branch node',
+    print: 'Print',
+    fullscreen: 'Fullscreen'
   },
   scale: {
     zoomIn: 'Zoom in',
@@ -252,7 +267,19 @@ export default {
     arrowDir: 'Arrow dir',
     arrowDirStart: 'Start',
     arrowDirEnd: 'End',
-    direction: 'Direction'
+    direction: 'Direction',
+    selectNodeTip: 'Please select a node',
+    openLineFlow: 'Open line flow',
+    lineFlowDuration: 'Line flow duration',
+    forward: 'Forward',
+    reverse: 'Reverse',
+    img: 'Image',
+    placement: 'Placement',
+    top: 'Top',
+    bottom: 'Bottom',
+    left: 'Left',
+    right: 'Right',
+    tag: 'Tag'
   },
   theme: {
     title: 'Theme',
@@ -307,7 +334,8 @@ export default {
     newFileTip:
       'Please export the currently edited file before creating a new one, Beware of content loss',
     openFileTip:
-      'Please export the currently edited file before opening it, Beware of content loss'
+      'Please export the currently edited file before opening it, Beware of content loss',
+    ai: 'AI'
   },
   edit: {
     newFeatureNoticeTitle: 'New feature reminder',
@@ -320,7 +348,9 @@ export default {
     no: 'No',
     exportError: 'Export failed',
     dragTip: 'Release here to import the file',
-    deleteNodeImgTip: 'Are you sure to delete the node image?'
+    deleteNodeImgTip: 'Are you sure to delete the node image?',
+    autoOpenNodeRichTextTip:
+      'Detected imported rich text content, automatically enabled rich text mode'
   },
   mouseAction: {
     tip1:
@@ -357,7 +387,8 @@ export default {
     fontSize: 'Font size',
     color: 'Color',
     backgroundColor: 'Background color',
-    removeFormat: 'Clear Style'
+    removeFormat: 'Clear Style',
+    textAlign: 'Text align'
   },
   other: {
     loading: 'Loading, please wait...'
@@ -396,5 +427,64 @@ export default {
   nodeTagStyle: {
     placeholder: 'Please enter the tag content',
     delete: 'Delete this tag'
+  },
+  ai: {
+    chatTitle: 'AI dialogue',
+    clearRecords: 'Clear records',
+    connectFailedTitle: 'Client connection failure prompt',
+    connectFailedTip: 'Client connection failed, please check:',
+    connectFailedCheckTip1:
+      '1. Have you installed the mind mapping client? If not, please click here to install:',
+    connectFailedCheckTip2:
+      '2. If the client is installed, please confirm if the client is opened.',
+    connectFailedCheckTip3:
+      'If it has already been installed and started, you can try closing and restarting it.',
+    connectFailedCheckTip4:
+      'After completing the above steps, you can click on:',
+    baiduNetdisk: 'Baidu Netdisk',
+    createMindMapTitle: 'One click generation of mind maps',
+    createTip:
+      'Please enter a theme, and AI will generate a mind map based on your theme, such as: Hangzhou weekend travel plan.',
+    importantTip:
+      'Important note: One click generation will overwrite existing data. It is recommended to export the current data first.',
+    wantModifyAiConfigTip:
+      'Do you want to modify the AI configuration? Please click on:',
+    modifyAIConfiguration: 'Modify AI configuration',
+    chatInputPlaceholder: 'Enter to send, Shift+Enter to wrap.',
+    send: 'Send',
+    stopGenerating: 'Stop generating',
+    generationFailed: 'Generation failed',
+    aiGenerationSuccess: 'AI generation completed',
+    stoppedGenerating: 'Stopped generating',
+    AIConfiguration: 'AI configuration',
+    VolcanoArkLargeModelConfiguration: 'Volcano Ark Large Model Configuration:',
+    configTip:
+      'At present, only the Volcano Ark model is supported, and you need to obtain the key yourself. For detailed operation steps, please refer to:',
+    course: 'Course',
+    inferenceAccessPoint: 'Inference access point',
+    mindMappingClientConfiguration: 'Mind mapping client configuration:',
+    port: 'Port',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    close: 'Close',
+    configSaveSuccessTip: 'Configuration saved successfully',
+    apiValidateTip: 'Please enter the interface',
+    keyValidateTip: 'Please enter the API Key',
+    modelValidateTip: 'Please enter the inference access point',
+    portValidateTip: 'Please enter the port',
+    methodValidateTip: 'Please select the request method',
+    noInputTip: 'Please enter the content',
+    connectSuccessful: 'Connection successful',
+    connectFailed: 'connection failed',
+    connectionDetection: 'Connection detection',
+    configurationMissing: 'Configuration missing',
+    aiCreateMsgPrefix: 'Help me write one【',
+    aiCreateMsgPostfix:
+      '】. It needs to be returned in Markdown format and can only use two syntax: Markdown title and unordered list. It can support multiple layers of nesting. Just return the content.',
+    aiCreatePartMsgPrefix: 'I have a theme for【',
+    aiCreatePartMsgCenter:
+      '】Can you help me continue writing one of the contents of the mind map【',
+    aiCreatePartMsgPostfix:
+      '】The subordinate content of the node needs to be returned in Markdown format and can only use two syntax: Markdown title and unordered list. It can support multi-level nesting. Just return the content.'
   }
 }

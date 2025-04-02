@@ -41,11 +41,8 @@ export default {
     rainbowLines: '彩虹線條',
     notUseRainbowLines: '不使用彩虹線條',
     outerFramePadding: '外框內距',
-    tagPosition: '節點標簽顯示的位置',
     tagPositionRight: '文本右側',
-    tagPositionBottom: '文本下面',
-    alwaysShowExpandBtn: '是否壹直顯示展開收起按鈕',
-    enableAutoEnterTextEditWhenKeydown: '鍵盤輸入時自動進入文本編輯'
+    tagPositionBottom: '文本下面'
   },
   setting: {
     title: '設置',
@@ -65,6 +62,7 @@ export default {
     openRealtimeRenderOnNodeTextEdit: '開啟文本編輯實時渲染效果',
     isShowScrollbar: '顯示捲軸',
     isUseHandDrawnLikeStyle: '使用手繪風格',
+    isUseMomentum: '是否開啓拖動畫布的動量效果',
     watermark: '浮水印',
     showWatermark: '顯示浮水印',
     onlyExport: '僅在匯出時顯示',
@@ -76,7 +74,20 @@ export default {
     watermarkAngle: '旋轉角度',
     watermarkTextOpacity: '文字透明度',
     watermarkTextFontSize: '字型大小',
-    belowNode: '顯示在節點下方'
+    belowNode: '顯示在節點下方',
+    confirm: '確定',
+    cancel: '取消',
+    changeRichTextTip:
+      '該操作會清空所有曆史修改記錄，並且修改思維導圖數據，是否繼續？',
+    changeRichTextTip2: '是否切換爲富文本模式？',
+    changeRichTextTip3: '是否切換爲非富文本模式？',
+    enableDragImport: '是否允許直接拖拽文件到頁面進行導入',
+    imgTextMargin: '節點圖片和文本間隔',
+    textContentMargin: '節點各種內容間隔',
+    enableAutoEnterTextEditWhenKeydown: '鍵盤輸入時自動進入文本編輯',
+    enableInheritAncestorLineStyle: '節點連線樣式繼承祖先節點的樣式',
+    alwaysShowExpandBtn: '是否壹直顯示展開收起按鈕',
+    enableAi: '是否開啓AI功能'
   },
   color: {
     moreColor: '更多顏色'
@@ -122,8 +133,10 @@ export default {
     copyFail: '複製失敗',
     number: '將其子節點編號',
     expandNodeChild: '展開所有下級節點',
+    unExpandNodeChild: '收起所有下級節點',
     addToDo: '添加待辦',
-    removeToDo: '刪除待辦'
+    removeToDo: '刪除待辦',
+    aiCreate: 'AI續寫'
   },
   count: {
     words: '字數',
@@ -143,10 +156,7 @@ export default {
     svgFile: 'SVG 檔案',
     pdfFile: 'PDF 檔案',
     markdownFile: 'Markdown 檔案',
-    tips: '提示：.smm 和 .json 檔案可以匯入',
     isTransparent: '背景透明',
-    pngTips: '提示：在豐富文字模式下匯出圖片非常耗時，建議匯出為 SVG 格式',
-    svgTips: '提示：在豐富文字模式下匯出圖片非常耗時',
     transformingDomToImages: '正在轉換節點：',
     notifyTitle: '訊息',
     notifyMessage: '如果沒有觸發下載，請檢查是否被瀏覽器封鎖',
@@ -155,7 +165,9 @@ export default {
     useMultiPageExport: '多頁匯出',
     defaultFileName: '心智圖',
     addFooterText: '在底部新增文字',
-    addFooterTextPlaceholder: '例如：來自 simple-mind-map'
+    addFooterTextPlaceholder: '例如：來自 simple-mind-map',
+    desc: '說明',
+    options: '選項'
   },
   fullscreen: {
     fullscreenShow: '全螢幕檢視',
@@ -206,7 +218,9 @@ export default {
   },
   outline: {
     title: '大綱',
-    nodeDefaultText: '分支節點'
+    nodeDefaultText: '分支節點',
+    print: '打印',
+    fullscreen: '全屏'
   },
   scale: {
     zoomIn: '放大',
@@ -248,7 +262,19 @@ export default {
     endColor: '結束',
     arrowDir: '箭頭位置',
     arrowDirStart: '頭部',
-    arrowDirEnd: '尾部'
+    arrowDirEnd: '尾部',
+    selectNodeTip: '請選擇壹個節點',
+    openLineFlow: '開啓流動效果',
+    lineFlowDuration: '一個流動周期的時間',
+    forward: '正向',
+    reverse: '反向',
+    img: '圖片',
+    placement: '布局',
+    top: '上',
+    bottom: '下',
+    left: '左',
+    right: '右',
+    tag: '標簽'
   },
   theme: {
     title: '主題',
@@ -299,7 +325,8 @@ export default {
     creatingTip: '正在建立檔案',
     directory: '目錄',
     newFileTip: '新增檔案前，請先匯出目前編輯的檔案，以免內容遺失',
-    openFileTip: '開啟檔案前，請先匯出目前編輯的檔案，以免內容遺失'
+    openFileTip: '開啟檔案前，請先匯出目前編輯的檔案，以免內容遺失',
+    ai: 'AI'
   },
   edit: {
     newFeatureNoticeTitle: '新功能提醒',
@@ -311,7 +338,8 @@ export default {
     yes: '是',
     no: '否',
     exportError: '匯出失敗',
-    dragTip: '在此釋放以匯入檔案'
+    dragTip: '在此釋放以匯入檔案',
+    autoOpenNodeRichTextTip: '檢測到導入了富文本內容，已自動開啓富文本模式'
   },
   mouseAction: {
     tip1: '目前：左鍵拖曳畫布，右鍵框選節點',
@@ -346,7 +374,8 @@ export default {
     fontSize: '字型大小',
     color: '字型顏色',
     backgroundColor: '背景顏色',
-    removeFormat: '清除樣式'
+    removeFormat: '清除樣式',
+    textAlign: '對齊方式'
   },
   other: {
     loading: '載入中，請稍候...'
@@ -385,5 +414,58 @@ export default {
   nodeTagStyle: {
     placeholder: '請輸入標籤內容',
     delete: '刪除此標籤'
+  },
+  ai: {
+    chatTitle: 'AI對話',
+    clearRecords: '清空記錄',
+    connectFailedTitle: '客戶端連接失敗提示',
+    connectFailedTip: '客戶端連接失敗，請檢查：',
+    connectFailedCheckTip1:
+      '1.是否安裝了思緒思維導圖客戶端，如果沒有請點此安裝：',
+    connectFailedCheckTip2: '2.如果安裝了客戶端，請確認是否打開了客戶端。',
+    connectFailedCheckTip3:
+      '3.如果已經安裝並啓動了，那麽可以嘗試關閉然後重新啓動。',
+    connectFailedCheckTip4: '完成以上步驟後可點擊：',
+    baiduNetdisk: '百度網盤',
+    createMindMapTitle: '一鍵生成思維導圖',
+    createTip:
+      '請輸入一個主題，AI會根據你的主題生成思維導圖，如：杭州周末出遊計劃。',
+    importantTip: '重要提示：一鍵生成會覆蓋現有數據，建議先導出當前數據。',
+    wantModifyAiConfigTip: '想要修改AI配置？請點擊：',
+    modifyAIConfiguration: '修改AI配置',
+    chatInputPlaceholder: 'Enter 發送，Shift   Enter 換行。',
+    send: '發送',
+    stopGenerating: '停止生成',
+    generationFailed: '生成失敗',
+    aiGenerationSuccess: 'AI生成完成',
+    stoppedGenerating: '已停止生成',
+    AIConfiguration: 'AI配置',
+    VolcanoArkLargeModelConfiguration: '火山方舟大模型配置：',
+    configTip: '目前僅支持火山方舟大模型，需要自行去獲取key，詳細操作步驟見：',
+    course: '教程',
+    inferenceAccessPoint: '推理接入點',
+    mindMappingClientConfiguration: '思緒思維導圖客戶端配置：',
+    port: '端口',
+    cancel: '取消',
+    confirm: '確認',
+    close: '關閉',
+    configSaveSuccessTip: '配置保存成功',
+    apiValidateTip: '請輸入接口',
+    keyValidateTip: '請輸入API Key',
+    modelValidateTip: '請輸入推理接入點',
+    portValidateTip: '請輸入端口',
+    methodValidateTip: '請選擇請求方式',
+    noInputTip: '請輸入內容',
+    connectSuccessful: '連接成功',
+    connectFailed: '連接失敗',
+    connectionDetection: '連接檢測',
+    configurationMissing: '配置缺失',
+    aiCreateMsgPrefix: '幫我寫一個【',
+    aiCreateMsgPostfix:
+      '】，需要以Markdown格式返回，並且只能使用Markdown的標題和無序列表兩種語法，可以支持多層嵌套。只需返回內容即可。',
+    aiCreatePartMsgPrefix: '我有一個主題爲【',
+    aiCreatePartMsgCenter: '】的思維導圖，幫我續寫其中一個內容爲【',
+    aiCreatePartMsgPostfix:
+      '】的節點的下級內容，需要以Markdown格式返回，並且只能使用Markdown的標題和無序列表兩種語法，可以支持多層嵌套。只需返回內容即可。'
   }
 }

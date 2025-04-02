@@ -56,6 +56,9 @@
         <span class="name">{{ $t('contextmenu.moveDownNode') }}</span>
         <span class="desc">Ctrl + ↓</span>
       </div>
+      <div class="item" @click="exec('UNEXPAND_ALL')">
+        <span class="name">{{ $t('contextmenu.unExpandNodeChild') }}</span>
+      </div>
       <div class="item" @click="exec('EXPAND_ALL')">
         <span class="name">{{ $t('contextmenu.expandNodeChild') }}</span>
       </div>
@@ -137,6 +140,10 @@
       <div class="item" @click="exec('EXPORT_CUR_NODE_TO_PNG')">
         <span class="name">{{ $t('contextmenu.exportNodeToPng') }}</span>
       </div>
+      <div class="splitLine" v-if="enableAi"></div>
+      <div class="item" @click="aiCreate" v-if="enableAi">
+        <span class="name">{{ $t('contextmenu.aiCreate') }}</span>
+      </div>
     </template>
     <template v-if="type === 'svg'">
       <div class="item" @click="exec('RETURN_CENTER')">
@@ -217,13 +224,8 @@ import { transformToTxt } from 'simple-mind-map/src/parse/toTxt'
 import { setDataToClipboard, setImgToClipboard, copy } from '@/utils'
 import { numberTypeList, numberLevelList } from '@/config'
 
-/**
- * @Author: 王林
- * @Date: 2021-06-24 22:53:10
- * @Desc: 右键菜单
- */
+// 右键菜单
 export default {
-  name: 'Contextmenu',
   props: {
     mindMap: {
       type: Object
@@ -242,7 +244,8 @@ export default {
       enableCopyToClipboardApi: navigator.clipboard,
       numberType: '',
       numberLevel: '',
-      subItemsShowLeft: false
+      subItemsShowLeft: false,
+      isNodeMousedown: false
     }
   },
   computed: {
@@ -250,7 +253,8 @@ export default {
       isZenMode: state => state.localConfig.isZenMode,
       isDark: state => state.localConfig.isDark,
       supportNumbers: state => state.supportNumbers,
-      supportCheckbox: state => state.supportCheckbox
+      supportCheckbox: state => state.supportCheckbox,
+      enableAi: state => state.localConfig.enableAi
     }),
     expandList() {
       return [
@@ -341,6 +345,7 @@ export default {
     this.$bus.$on('svg_mousedown', this.onMousedown)
     this.$bus.$on('mouseup', this.onMouseup)
     this.$bus.$on('translate', this.hide)
+    this.$bus.$on('node_mousedown', this.onNodeMousedown)
   },
   beforeDestroy() {
     this.$bus.$off('node_contextmenu', this.show)
@@ -350,6 +355,7 @@ export default {
     this.$bus.$off('svg_mousedown', this.onMousedown)
     this.$bus.$off('mouseup', this.onMouseup)
     this.$bus.$off('translate', this.hide)
+    this.$bus.$off('node_mousedown', this.onNodeMousedown)
   },
   methods: {
     ...mapMutations(['setLocalConfig']),
@@ -384,6 +390,10 @@ export default {
       })
     },
 
+    onNodeMousedown() {
+      this.isNodeMousedown = true
+    },
+
     // 鼠标按下事件
     onMousedown(e) {
       if (e.which !== 3) {
@@ -397,6 +407,10 @@ export default {
     // 鼠标松开事件
     onMouseup(e) {
       if (!this.isMousedown) {
+        return
+      }
+      if (this.isNodeMousedown) {
+        this.isNodeMousedown = false
         return
       }
       this.isMousedown = false
@@ -473,8 +487,12 @@ export default {
             this.node
           )
           break
+        case 'UNEXPAND_ALL':
+          const uid = this.node ? this.node.uid : ''
+          this.$bus.$emit('execCommand', key, !uid, uid)
+          break
         case 'EXPAND_ALL':
-          this.$bus.$emit('execCommand', key, this.node.uid)
+          this.$bus.$emit('execCommand', key, this.node ? this.node.uid : '')
           break
         default:
           this.$bus.$emit('execCommand', key, ...args)
@@ -562,6 +580,12 @@ export default {
         console.log(error)
         this.$message.error(this.$t('contextmenu.copyFail'))
       }
+    },
+
+    // AI续写
+    aiCreate() {
+      this.$bus.$emit('ai_create_part', this.node)
+      this.hide()
     }
   }
 }
