@@ -4,7 +4,7 @@
       class="nodeImportDialog"
       :title="$t('import.title')"
       :visible.sync="dialogVisible"
-      width="300px"
+      width="350px"
     >
       <el-upload
         ref="upload"
@@ -59,7 +59,7 @@
 <script>
 import xmind from 'simple-mind-map/src/parse/xmind.js'
 import markdown from 'simple-mind-map/src/parse/markdown.js'
-import { mapMutations, mapState } from 'vuex'
+import { mapMutations } from 'vuex'
 import Vue from 'vue'
 
 // 导入
@@ -71,23 +71,13 @@ export default {
       selectPromiseResolve: null,
       xmindCanvasSelectDialogVisible: false,
       selectCanvas: '',
-      canvasList: []
+      canvasList: [],
+      mdStr: ''
     }
   },
   computed: {
-    ...mapState({
-      supportFreemind: state => state.supportFreemind,
-      supportExcel: state => state.supportExcel
-    }),
     supportFileStr() {
-      let res = '.smm,.json,.xmind,.md'
-      if (this.supportFreemind) {
-        res += ',.mm'
-      }
-      if (this.supportExcel) {
-        res += ',.xlsx'
-      }
-      return res
+      return '.smm,.json,.xmind,.md'
     }
   },
   watch: {
@@ -115,11 +105,7 @@ export default {
     },
 
     getRegexp() {
-      return new RegExp(
-        `\.(smm|json|xmind|md${this.supportFreemind ? '|mm' : ''}${
-          this.supportExcel ? '|xlsx' : ''
-        })$`
-      )
+      return new RegExp(`\.(smm|json|xmind|md)$`)
     },
 
     // 检查url中是否操作需要打开的文件
@@ -141,12 +127,8 @@ export default {
           this.handleSmm(data)
         } else if (type === 'xmind') {
           this.handleXmind(data)
-        } else if (type === 'xlsx') {
-          this.handleExcel(data)
         } else if (type === 'md') {
           this.handleMd(data)
-        } else if (type === 'mm') {
-          this.handleMm(data)
         }
       } catch (error) {
         console.log(error)
@@ -193,12 +175,8 @@ export default {
         this.handleSmm(file)
       } else if (/\.xmind$/.test(file.name)) {
         this.handleXmind(file)
-      } else if (/\.xlsx$/.test(file.name)) {
-        this.handleExcel(file)
       } else if (/\.md$/.test(file.name)) {
         this.handleMd(file)
-      } else if (/\.mm$/.test(file.name)) {
-        this.handleMm(file)
       }
       this.cancel()
       this.setActiveSidebar(null)
@@ -240,36 +218,6 @@ export default {
       }
     },
 
-    // 处理Freemind格式
-    handleMm(file) {
-      const fileReader = new FileReader()
-      fileReader.readAsText(file.raw)
-      fileReader.onload = async evt => {
-        try {
-          const data = await Vue.prototype.Freemind.freemindToSmm(
-            evt.target.result,
-            {
-              // withStyle: true,
-              transformImg: image => {
-                return new Promise(resolve => {
-                  if (/^https?:\/\//.test(image)) {
-                    resolve({ url: image })
-                  } else {
-                    resolve(null)
-                  }
-                })
-              }
-            }
-          )
-          this.$bus.$emit('setData', data)
-          this.$message.success(this.$t('import.importSuccess'))
-        } catch (error) {
-          console.log(error)
-          this.$message.error(this.$t('import.fileParsingFailed'))
-        }
-      }
-    },
-
     // 显示xmind文件的多个画布选择弹窗
     showSelectXmindCanvasDialog(content) {
       this.canvasList = content
@@ -283,18 +231,6 @@ export default {
       this.xmindCanvasSelectDialogVisible = false
       this.canvasList = []
       this.selectCanvas = 0
-    },
-
-    // 处理.xlsx文件
-    async handleExcel(file) {
-      try {
-        const res = await Vue.prototype.Excel.excelTo(file.raw)
-        this.$bus.$emit('setData', res)
-        this.$message.success(this.$t('import.importSuccess'))
-      } catch (error) {
-        console.log(error)
-        this.$message.error(this.$t('import.fileParsingFailed'))
-      }
     },
 
     // 处理markdown文件

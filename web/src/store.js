@@ -1,13 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import exampleData from 'simple-mind-map/example/exampleData'
 import { storeLocalConfig } from '@/api'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    mindMapData: null, // 思维导图数据
     isHandleLocalFile: false, // 是否操作的是本地文件
     localConfig: {
       // 本地配置
@@ -18,10 +16,6 @@ const store = new Vuex.Store({
       useLeftKeySelectionRightKeyDrag: false,
       // 是否显示滚动条
       isShowScrollbar: false,
-      // 是否开启手绘风格
-      isUseHandDrawnLikeStyle: false,
-      // 是否开启动量效果
-      isUseMomentum: true,
       // 是否是暗黑模式
       isDark: false,
       // 是否开启AI功能
@@ -32,14 +26,6 @@ const store = new Vuex.Store({
     isReadonly: false, // 是否只读
     isSourceCodeEdit: false, // 是否是源码编辑模式
     extraTextOnExport: '', // 导出时底部添加的文字
-    supportHandDrawnLikeStyle: false, // 是否支持设置手绘风格
-    supportMark: false, // 是否支持标记
-    supportNumbers: false, // 是否支持编号
-    supportFreemind: false, // 是否支持Freemind插件
-    supportExcel: false, // 是否支持Excel插件
-    supportCheckbox: false, // 是否支持Checkbox插件
-    supportLineFlow: false, // 是否支持LineFlow插件
-    supportMomentum: false, // 是否支持Momentum插件
     isDragOutlineTreeNode: false, // 当前是否正在拖拽大纲树的节点
     aiConfig: {
       api: 'http://ark.cn-beijing.volces.com/api/v3/chat/completions',
@@ -47,14 +33,13 @@ const store = new Vuex.Store({
       model: '',
       port: 3456,
       method: 'POST'
-    }
+    },
+    // 扩展主题列表
+    extendThemeGroupList: [],
+    // 内置背景图片
+    bgList: []
   },
   mutations: {
-    // 设置思维导图数据
-    setMindMapData(state, data) {
-      state.mindMapData = data
-    },
-
     // 设置操作本地文件标志位
     setIsHandleLocalFile(state, data) {
       state.isHandleLocalFile = data
@@ -101,68 +86,22 @@ const store = new Vuex.Store({
       state.extraTextOnExport = data
     },
 
-    // 设置是否支持手绘风格
-    setSupportHandDrawnLikeStyle(state, data) {
-      state.supportHandDrawnLikeStyle = data
-    },
-
-    // 设置是否支持标记
-    setSupportMark(state, data) {
-      state.supportMark = data
-    },
-
-    // 设置是否支持编号
-    setSupportNumbers(state, data) {
-      state.supportNumbers = data
-    },
-
-    // 设置是否支持Freemind插件
-    setSupportFreemind(state, data) {
-      state.supportFreemind = data
-    },
-
-    // 设置是否支持Excel插件
-    setSupportExcel(state, data) {
-      state.supportExcel = data
-    },
-
-    // 设置是否支持Checkbox插件
-    setSupportCheckbox(state, data) {
-      state.supportCheckbox = data
-    },
-
-    // 设置是否支持Lineflow插件
-    setSupportLineFlow(state, data) {
-      state.supportLineFlow = data
-    },
-
-    // 设置是否支持Momentum插件
-    setSupportMomentum(state, data) {
-      state.supportMomentum = data
-    },
-
     // 设置树节点拖拽
     setIsDragOutlineTreeNode(state, data) {
       state.isDragOutlineTreeNode = data
+    },
+
+    // 扩展主题列表
+    setExtendThemeGroupList(state, data) {
+      state.extendThemeGroupList = data
+    },
+
+    // 设置背景图片列表
+    setBgList(state, data) {
+      state.bgList = data
     }
   },
-  actions: {
-    // 设置初始思维导图数据
-    getUserMindMapData(ctx) {
-      try {
-        let { data } = {
-          data: {
-            data: {
-              mindMapData: exampleData
-            }
-          }
-        }
-        ctx.commit('setMindMapData', data.data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }
+  actions: {}
 })
 
 export default store
